@@ -16,6 +16,14 @@ export class Tetromino {
         return newTetromino
     }
 
+    rotateLeft() {
+        const newTetromino = new Tetromino("")
+        newTetromino.shape = this.shape.map((r,i) => r.map((c,j) => {
+            return this.shape[j][(this.shape.length - 1) - i]
+        }))
+        return newTetromino
+    }
+
 }
 
 Tetromino.T_SHAPE = new Tetromino(`.T.\nTTT\n...`)
