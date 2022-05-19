@@ -3,10 +3,13 @@ export class Tetromino {
     stringShape;
     orientations;
     orientation;
-
+    width;
+    height;
     constructor(stringShape, orientations, orientation = 0) {
         this.stringShape = stringShape
         this.shape = stringShape.split("\n").map(s => s.trim().split(''))
+        this.width = this.shape.length
+        this.height = this.shape[0].length
         this.orientations = orientations
         this.orientation = Math.abs((orientation + orientations) % orientations)
     }

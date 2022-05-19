@@ -1,8 +1,8 @@
 export class Block {
   color;
   falling;
-  constructor(color) {
+  constructor(color, falling = true) {
     this.color = color;
-    this.falling = true;
+    this.falling = falling;
   }
 }
