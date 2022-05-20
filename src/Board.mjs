@@ -62,6 +62,16 @@ export class Board {
                 this.fallingBlock.getShape().forEach((r,y) => r.forEach((c,x) => {
                     if (c) this.rows[this.fallingBlockLocation.y + y][x + this.fallingBlockLocation.x] = new Block(this.fallingBlock.symbol, false)
                 }))
+                this.rows.forEach((row, i) => {
+                    let isFull = true
+                    row.forEach(c => {if (c === null) isFull = false })
+                    if (isFull) {
+                        for (let j = i; j > 0; j--) {
+                            this.rows[j] = [...this.rows[j-1]]
+                        }
+                        this.rows[0] = Array(this.width).fill(null)
+                    }
+                })
                 this.fallingBlock = null
             }
         } else if (this.hasFalling()) {
@@ -99,7 +109,7 @@ export class Board {
                     if (blockLocation.y + y < 0) return true
                     if (blockLocation.x + x > this.width - 1) return true
                     if (blockLocation.x + x < 0) return true
-                    if (this.rows[blockLocation.y + y][blockLocation.x + x]) return true
+                    if (field[blockLocation.y + y][blockLocation.x + x]) return true
                 }
             }
         }
