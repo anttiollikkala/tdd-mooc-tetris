@@ -7,6 +7,7 @@ export class Board {
     rows;
     fallingBlockLocation;
     fallingBlock;
+    onClearLine;
     constructor(width, height) {
         this.width = width;
         this.height = height;
@@ -62,16 +63,19 @@ export class Board {
                 this.fallingBlock.getShape().forEach((r,y) => r.forEach((c,x) => {
                     if (c) this.rows[this.fallingBlockLocation.y + y][x + this.fallingBlockLocation.x] = new Block(this.fallingBlock.symbol, false)
                 }))
+                let clearLineCount = 0
                 this.rows.forEach((row, i) => {
                     let isFull = true
                     row.forEach(c => {if (c === null) isFull = false })
                     if (isFull) {
+                        clearLineCount++
                         for (let j = i; j > 0; j--) {
                             this.rows[j] = [...this.rows[j-1]]
                         }
                         this.rows[0] = Array(this.width).fill(null)
                     }
                 })
+                if (clearLineCount && this.onClearLine) this.onClearLine(clearLineCount)
                 this.fallingBlock = null
             }
         } else if (this.hasFalling()) {

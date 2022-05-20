@@ -1,4 +1,4 @@
-import {expect} from "chai";
+import {expect, } from "chai";
 import {Board} from "../src/Board.mjs";
 import {Tetromino} from "../src/Tetromino.mjs";
 import {Block} from "../src/Block.mjs";
@@ -39,6 +39,38 @@ describe("Line Clear", () => {
        ..........
        ...TTT....`
         );
+    });
+
+    it("board calls callback with correct lines number", () => {
+        board.drop(Tetromino.T_SHAPE);
+        let points = 0
+        board.onClearLine = p => points = p
+        board.rows[5] = [
+            new Block('T', false),
+            new Block('T', false),
+            new Block('T', false),
+            new Block('T', false),
+            null,
+            new Block('T', false),
+            new Block('T', false),
+            new Block('T', false),
+            new Block('T', false),
+            new Block('T', false),
+        ]
+        board.rows[4] = [
+            new Block('T', false),
+            new Block('T', false),
+            new Block('T', false),
+            null,
+            null,
+            null,
+            new Block('T', false),
+            new Block('T', false),
+            new Block('T', false),
+            new Block('T', false),
+        ]
+        fallToBottom(board)
+        expect(points).to.equal(2)
     });
 
 });
