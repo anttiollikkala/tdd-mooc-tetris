@@ -19,13 +19,12 @@ export class Board {
         const map = this.rows.map(r => r.slice())
         if (this.fallingBlock) {
             this.fallingBlock.getShape().forEach((r,y) => r.forEach((c,x) => {
-                if (c !== '.') map[this.fallingBlockLocation.y + y][this.fallingBlockLocation.x + x] = new Block(c)
+                if (c) map[this.fallingBlockLocation.y + y][this.fallingBlockLocation.x + x] = new Block(this.fallingBlock.symbol)
             }))
         }
         return map.map(row =>
             row.map(block => {
-                if (!block) return '.'
-                else return block.color
+                return block ? block.color : '.'
             })).map(row => [...row, '\n'].join('')).join('')
     }
 
@@ -33,7 +32,7 @@ export class Board {
     drop(block) {
         if (this.hasFalling()) throw new Error('already falling')
         if (block instanceof Tetromino) {
-            this.fallingBlockLocation = {x: Math.floor((this.width - block.width) / 2), y: 0}
+            this.fallingBlockLocation = {x: Math.floor((this.width - 4) / 2), y: -1}
             this.fallingBlock = block
         } else {
             this.rows[0][1] = block
@@ -42,7 +41,6 @@ export class Board {
 
     moveLeft() {
         if (!this.collides(this.rows, this.fallingBlock, {x: this.fallingBlockLocation.x-1, y: this.fallingBlockLocation.y})) this.fallingBlockLocation.x--
-
     }
 
     moveRight() {
@@ -62,7 +60,7 @@ export class Board {
             ) this.fallingBlockLocation.y++
             else {
                 this.fallingBlock.getShape().forEach((r,y) => r.forEach((c,x) => {
-                    if (c !== '.') this.rows[this.fallingBlockLocation.y + y][x + this.fallingBlockLocation.x] = new Block(c, false)
+                    if (c) this.rows[this.fallingBlockLocation.y + y][x + this.fallingBlockLocation.x] = new Block(this.fallingBlock.symbol, false)
                 }))
                 this.fallingBlock = null
             }
@@ -93,14 +91,14 @@ export class Board {
 
     collides(field, block, blockLocation,) {
         if (!block) return false
-        for (let y = 0; y < block.width; y++) {
-            for (let x = 0; x < block.height; x++) {
-                if (block.getShape()[y][x] !== '.') {
+        for (let y = 0; y < 4; y++) {
+            for (let x = 0; x < 4; x++) {
+                if (block.getShape()[y][x]) {
                     if (blockLocation.y + y > this.height - 1) return true
                     if (blockLocation.x + x > this.width - 1) return true
-                    if (blockLocation.y < 0) return true
+                    if (blockLocation.y + y < 0) return true
                     if (blockLocation.x + x > this.width - 1) return true
-                    if (blockLocation.x < 0) return true
+                    if (blockLocation.x + x < 0) return true
                     if (this.rows[blockLocation.y + y][blockLocation.x + x]) return true
                 }
             }

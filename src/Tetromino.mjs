@@ -1,45 +1,178 @@
 export class Tetromino {
-    shape;
-    stringShape;
-    orientations;
+    symbol;
+    shapes;
     orientation;
-    width;
-    height;
-    constructor(stringShape, orientations, orientation = 0) {
-        this.stringShape = stringShape
-        this.shape = stringShape.trim().split("\n").map(s => s.trim().split(''))
-        this.width = this.shape.length
-        this.height = this.shape[0].length
-        this.orientations = orientations
-        this.orientation = Math.abs((orientation + orientations) % orientations)
+    constructor(symbol, shapes, orientation = 0) {
+        this.symbol = symbol
+        this.shapes = shapes
+        this.orientation = Math.abs((orientation + shapes.length) % shapes.length)
     }
 
     toString() {
-        return this.getShape().map(s => s.join('')).join("\n") + "\n"
+        return this.getShape().map( r => r.map(c => c ? this.symbol : '.').join("")).join("\n") + "\n"
     }
 
     rotateRight() {
-        return new Tetromino(this.stringShape, this.orientations, this.orientation + 1)
+        return new Tetromino(this.symbol, this.shapes, this.orientation + 1)
     }
-
     rotateLeft() {
-        return new Tetromino(this.stringShape, this.orientations, this.orientation - 1)
+        return new Tetromino(this.symbol, this.shapes, this.orientation - 1)
     }
 
     getShape() {
-        let rotatedShape = this.shape.map(r => r.slice())
-        for (let i = 0; i < this.orientation; i++) {
-            rotatedShape = rotatedShape.map((r, i) => r.map((c, j) => {
-                return rotatedShape[(rotatedShape.length - 1) - j][i]
-            }))
-        }
-        return rotatedShape
+        return this.shapes[this.orientation]
     }
 
 }
 
-Tetromino.T_SHAPE = new Tetromino(`.T.\nTTT\n...`, 4)
+const iShapes = [
+    [
+        [0, 0, 0, 0],
+        [1, 1, 1, 1],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0]
+    ],
+    [
+        [0, 0, 1, 0],
+        [0, 0, 1, 0],
+        [0, 0, 1, 0],
+        [0, 0, 1, 0]
+    ],
+]
 
-Tetromino.I_SHAPE = new Tetromino(`.....\n.....\nIIII.\n.....\n.....`, 2)
+const tShapes = [
 
-Tetromino.O_SHAPE = new Tetromino(`.OO\n.OO\n...`, 1)
+    [
+        [0, 0, 0, 0],
+        [1, 1, 1, 0],
+        [0, 1, 0, 0],
+        [0, 0, 0, 0]
+    ],
+    [
+        [0, 1, 0, 0],
+        [1, 1, 0, 0],
+        [0, 1, 0, 0],
+        [0, 0, 0, 0]
+    ],
+    [
+        [0, 0, 0, 0],
+        [0, 1, 0, 0],
+        [1, 1, 1, 0],
+        [0, 0, 0, 0]
+    ],
+    [
+        [0, 1, 0, 0],
+        [0, 1, 1, 0],
+        [0, 1, 0, 0],
+        [0, 0, 0, 0]
+    ]
+
+]
+
+const lShapes = [
+
+    [
+        [0, 0, 0, 0],
+        [1, 1, 1, 0],
+        [1, 0, 0, 0],
+        [0, 0, 0, 0]
+    ],
+    [
+        [1, 1, 0, 0],
+        [0, 1, 0, 0],
+        [0, 1, 0, 0],
+        [0, 0, 0, 0]
+    ],
+    [
+        [0, 0, 0, 0],
+        [0, 0, 1, 0],
+        [1, 1, 1, 0],
+        [0, 0, 0, 0]
+    ],
+    [
+        [0, 1, 0, 0],
+        [0, 1, 0, 0],
+        [0, 1, 1, 0],
+        [0, 0, 0, 0]
+    ]
+
+]
+
+const lrShapes = [
+
+    [
+        [0, 0, 0, 0],
+        [1, 1, 1, 0],
+        [0, 0, 1, 0],
+        [0, 0, 0, 0]
+    ],
+    [
+        [0, 1, 0, 0],
+        [0, 1, 0, 0],
+        [1, 1, 0, 0],
+        [0, 0, 0, 0]
+    ],
+    [
+        [0, 0, 0, 0],
+        [1, 0, 0, 0],
+        [1, 1, 1, 0],
+        [0, 0, 0, 0]
+    ],
+    [
+        [0, 1, 1, 0],
+        [0, 1, 0, 0],
+        [0, 1, 0, 0],
+        [0, 0, 0, 0]
+    ]
+
+]
+
+
+const sShapes = [
+
+    [
+        [0, 0, 0, 0],
+        [0, 1, 1, 0],
+        [1, 1, 0, 0],
+        [0, 0, 0, 0]
+    ],
+    [
+        [1, 0, 0, 0],
+        [1, 1, 0, 0],
+        [0, 1, 0, 0],
+        [0, 0, 0, 0]
+    ],
+
+]
+
+const zShapes = [
+
+    [
+        [0, 0, 0, 0],
+        [1, 1, 0, 0],
+        [0, 1, 1, 0],
+        [0, 0, 0, 0]
+    ],
+    [
+        [0, 0, 1, 0],
+        [0, 1, 1, 0],
+        [0, 1, 0, 0],
+        [0, 0, 0, 0]
+    ],
+
+]
+
+const oShapes = [
+    [
+        [0, 0, 0, 0],
+        [0, 1, 1, 0],
+        [0, 1, 1, 0],
+        [0, 0, 0, 0]
+    ],
+]
+
+Tetromino.T_SHAPE = new Tetromino('T', tShapes, 4)
+
+Tetromino.I_SHAPE = new Tetromino('I', iShapes, 2)
+
+Tetromino.O_SHAPE = new Tetromino('O', oShapes, 1)
