@@ -40,6 +40,19 @@ export class Board {
         }
     }
 
+    moveLeft() {
+        if (!this.collides(this.rows, this.fallingBlock, {x: this.fallingBlockLocation.x-1, y: this.fallingBlockLocation.y})) this.fallingBlockLocation.x--
+
+    }
+
+    moveRight() {
+        if (!this.collides(this.rows, this.fallingBlock, {x: this.fallingBlockLocation.x+1, y: this.fallingBlockLocation.y})) this.fallingBlockLocation.x++
+    }
+
+    moveDown() {
+        this.tick()
+    }
+
     tick() {
         if (this.fallingBlock) {
             if (!this.collides(
@@ -79,10 +92,14 @@ export class Board {
     }
 
     collides(field, block, blockLocation) {
+        if (!block) return false
         for (let y = 0; y < block.width; y++) {
             for (let x = 0; x < block.height; x++) {
                 if (block.shape[y][x] !== '.') {
                     if (blockLocation.y + y > this.height - 1 || this.fallingBlockLocation.x + x > this.width - 1) return true
+                    if (blockLocation.y< 0 || this.fallingBlockLocation.x + x > this.width - 1) return true
+                    if (blockLocation.x < 0) return true
+                    if (blockLocation.x + x > this.width -1) return true
                     if (this.rows[blockLocation.y + y][blockLocation.x + x]) return true
                 }
             }
