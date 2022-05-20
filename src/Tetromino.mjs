@@ -7,7 +7,7 @@ export class Tetromino {
     height;
     constructor(stringShape, orientations, orientation = 0) {
         this.stringShape = stringShape
-        this.shape = stringShape.split("\n").map(s => s.trim().split(''))
+        this.shape = stringShape.trim().split("\n").map(s => s.trim().split(''))
         this.width = this.shape.length
         this.height = this.shape[0].length
         this.orientations = orientations
@@ -15,13 +15,7 @@ export class Tetromino {
     }
 
     toString() {
-        let rotatedShape = this.shape.map(r => r.slice())
-        for (let i = 0; i < this.orientation; i++) {
-            rotatedShape = rotatedShape.map((r, i) => r.map((c, j) => {
-                return rotatedShape[(rotatedShape.length - 1) - j][i]
-            }))
-        }
-        return rotatedShape.map(s => s.join('')).join("\n") + "\n"
+        return this.getShape().map(s => s.join('')).join("\n") + "\n"
     }
 
     rotateRight() {
@@ -30,6 +24,16 @@ export class Tetromino {
 
     rotateLeft() {
         return new Tetromino(this.stringShape, this.orientations, this.orientation - 1)
+    }
+
+    getShape() {
+        let rotatedShape = this.shape.map(r => r.slice())
+        for (let i = 0; i < this.orientation; i++) {
+            rotatedShape = rotatedShape.map((r, i) => r.map((c, j) => {
+                return rotatedShape[(rotatedShape.length - 1) - j][i]
+            }))
+        }
+        return rotatedShape
     }
 
 }

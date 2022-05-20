@@ -18,7 +18,6 @@ function moveBeyondLeftEdge(board) {
 function moveBeyondRightEdge(board) {
     for (let i = 0; i < 10; i++) {
         board.moveRight();
-        console.log(board.toString())
     }
 }
 
@@ -101,7 +100,7 @@ describe("Falling tetrominoes", () => {
         board.drop(Tetromino.T_SHAPE);
         fallToBottom(board)
         board.moveDown()
-        expect(board.hasFalling()).to.be.false;
+
         expect(board.toString()).to.equalShape(
             `..........
        ..........
@@ -172,3 +171,4 @@ describe("Falling tetrominoes", () => {
     });
 
 });
+

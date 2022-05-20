@@ -18,7 +18,7 @@ export class Board {
     toString() {
         const map = this.rows.map(r => r.slice())
         if (this.fallingBlock) {
-            this.fallingBlock.shape.forEach((r,y) => r.forEach((c,x) => {
+            this.fallingBlock.getShape().forEach((r,y) => r.forEach((c,x) => {
                 if (c !== '.') map[this.fallingBlockLocation.y + y][this.fallingBlockLocation.x + x] = new Block(c)
             }))
         }
@@ -61,7 +61,7 @@ export class Board {
                 {x: this.fallingBlockLocation.x, y: this.fallingBlockLocation.y + 1})
             ) this.fallingBlockLocation.y++
             else {
-                this.fallingBlock.shape.forEach((r,y) => r.forEach((c,x) => {
+                this.fallingBlock.getShape().forEach((r,y) => r.forEach((c,x) => {
                     if (c !== '.') this.rows[this.fallingBlockLocation.y + y][x + this.fallingBlockLocation.x] = new Block(c, false)
                 }))
                 this.fallingBlock = null
@@ -91,21 +91,72 @@ export class Board {
 
     }
 
-    collides(field, block, blockLocation) {
+    collides(field, block, blockLocation,) {
         if (!block) return false
         for (let y = 0; y < block.width; y++) {
             for (let x = 0; x < block.height; x++) {
-                if (block.shape[y][x] !== '.') {
-                    if (blockLocation.y + y > this.height - 1 || this.fallingBlockLocation.x + x > this.width - 1) return true
-                    if (blockLocation.y< 0 || this.fallingBlockLocation.x + x > this.width - 1) return true
+                if (block.getShape()[y][x] !== '.') {
+                    if (blockLocation.y + y > this.height - 1) return true
+                    if (blockLocation.x + x > this.width - 1) return true
+                    if (blockLocation.y < 0) return true
+                    if (blockLocation.x + x > this.width - 1) return true
                     if (blockLocation.x < 0) return true
-                    if (blockLocation.x + x > this.width -1) return true
                     if (this.rows[blockLocation.y + y][blockLocation.x + x]) return true
                 }
             }
         }
+
         return false;
     }
+
+    rotateRight() {
+        if (!this.collides(
+                this.rows, this.fallingBlock.rotateRight(), this.fallingBlockLocation )) {
+            this.fallingBlock = this.fallingBlock.rotateRight()
+            return this
+        }
+        for (let i = 1; i < 5; i++) {
+            if (!this.collides(
+                this.rows, this.fallingBlock.rotateRight(), {...this.fallingBlockLocation, x: this.fallingBlockLocation.x+i}, true )) {
+                this.fallingBlockLocation.x++
+                this.fallingBlock = this.fallingBlock.rotateRight()
+                return this
+            }
+            if (!this.collides(
+                this.rows,this.fallingBlock.rotateRight(), {...this.fallingBlockLocation, x: this.fallingBlockLocation.x-i}, true  )) {
+                this.fallingBlockLocation.x--
+                this.fallingBlock = this.fallingBlock.rotateRight()
+                return this
+            }
+        }
+
+        return this
+    }
+
+    rotateLeft() {
+        if (!this.collides(
+            this.rows, this.fallingBlock.rotateLeft(), this.fallingBlockLocation, true )) {
+            this.fallingBlock = this.fallingBlock.rotateLeft()
+            return this
+        }
+        for (let i = 1; i < 5; i++) {
+            if (!this.collides(
+                this.rows, this.fallingBlock.rotateLeft(), {...this.fallingBlockLocation, x: this.fallingBlockLocation.x+i}, true  )) {
+                this.fallingBlockLocation.x++
+                this.fallingBlock = this.fallingBlock.rotateLeft()
+                return this
+            }
+
+            if (!this.collides(
+                this.rows, this.fallingBlock.rotateLeft(), {...this.fallingBlockLocation, x: this.fallingBlockLocation.x-i}, true  )) {
+                this.fallingBlockLocation.x--
+                this.fallingBlock = this.fallingBlock.rotateLeft()
+                return this
+            }
+        }
+        return this
+    }
+
 
     hasFalling() {
         if (this.fallingBlock) return true
